@@ -18,6 +18,6 @@
 
 Comming soon! (Hopefully)
 
-## Contributiond
+## Contributions
 
 Contributions are welcomed! Please open pull request on this repository.
