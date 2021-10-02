@@ -5,6 +5,7 @@ from datetime import datetime
 import investpy
 import streamlit as st
 from datetime import datetime, timedelta
+import pandas_ta as ta
 
 
 def remove_gap_from_history(hist: pd.DataFrame, fig: go.Figure) -> None:
@@ -44,6 +45,8 @@ def data_transformation(stock_name: str, lookback_days: int) -> pd.DataFrame:
     set_index_df = set_index_df[['Open', 'High', 'Low', 'Close']]
 
     result_df = stock_df / set_index_df if option == 'Relative with SET' else stock_df
+    
+    result_df["EMA200"] = ta.ema(result_df["Close"], length=200)
     return result_df
 
 title = "Stock in Thailand's relative price to SET index"
@@ -69,7 +72,8 @@ fig = go.Figure(data=[go.Candlestick(x=result_df.index,
                 open=result_df['Open'],
                 high=result_df['High'],
                 low=result_df['Low'],
-                close=result_df['Close'])])
+                close=result_df['Close'], name="Candle stick"), 
+                go.Scatter(x=result_df.index, y=result_df['EMA200'], line=dict(color='orange', width=2), name="EMA200")])
 
 fig.update_layout(height=800)
 
