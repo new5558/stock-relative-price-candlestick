@@ -17,3 +17,7 @@
 ## Deployment
 
 Comming soon! (Hopefully)
+
+## Contributiond
+
+Contributions are welcomed! Please open pull request on this repository.
