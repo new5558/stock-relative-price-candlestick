@@ -35,19 +35,23 @@ def load_set_index_data():
     return set_index_df
 
 
-st.title("Stock in Thailand's relative price to SET index")
+stock_name = ""
+with st.expander("Toggle settings", expanded = True):
+    st.title("Stock in Thailand's relative price to SET index")
 
-stocks_list = investpy.stocks.get_stocks_list('Thailand')
-stocks_list.remove('MONTRIu')
-stock_name = st.selectbox('Select stock name', stocks_list)
+    stocks_list = investpy.stocks.get_stocks_list('Thailand')
+    stocks_list.remove('MONTRIu')
+    stock_name = st.selectbox('Select stock name', stocks_list)
+
+    st.write('selected stock:', stock_name)
 
 
-st.write('selected stock:', stock_name)
+
+    option = st.radio('Options', ['Relative with SET', 'Original'])
 
 stock_df = load_stock_data(stock_name)
 set_index_df = load_set_index_data()
 
-option = st.radio('Options', ['Relative with SET', 'Original'])
 stock_df = stock_df[['Open', 'High', 'Low', 'Close']]
 set_index_df = set_index_df[['Open', 'High', 'Low', 'Close']]
 
