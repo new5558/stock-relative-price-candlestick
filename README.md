@@ -15,15 +15,28 @@
 
 ## Potential usage
 
-- Create beta neutral price action strategy from candlestick graph. This can be done using SET50 index future to hedge your stock position,
-- Create statistical abritage strategy from price action. For example,
-- Imply inividual stock's rolling relative strength with market by looking at historial candlestick
+- Create beta neutral price action strategy from candlestick graph. This can be done using SET50 index future to hedge your stock position.
+- Create statistical abritage strategy from price action. For example, we can buy stocks that is tempory underperform SET index and short sell temprty overperform SET index stocks
+- Imply inividual stock's rolling relative strength with market by looking at historial candlestick.
 - and many more..
 
 ## Run app locally
+### Using docker
+Run the following command
 
-`docker build -t streamlitapp:latest .`
-`docker run streamlitapp`
+`docker build -t streamlitapp:latest .`  
+
+`docker run streamlitapp`  
+
+### Using python
+
+Run the following command
+
+`pip install -r requirements.txt`
+
+`streamlit run main.py`
+
+#### The application should be accesible on web brwoser via `localhost:8501`
 
 ## Contributions
 
