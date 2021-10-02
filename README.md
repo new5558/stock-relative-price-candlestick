@@ -9,10 +9,10 @@
 ## Ideas
 
 ### Key features
-- Inspired by Crypto symbols that is not traded with stable coin etc `BNBBTC`, `ETHBTC`
-- Use investpy-api to get OHLC data of SET index and stocks in Thailand
-- Create as an interactable webapp using Streamlit
-- Add some customizations!
+- Inspired by Crypto symbols that are traded with non stable coin etc `BNBBTC`, `ETHBTC`
+- Use [investpy](https://pypi.org/project/investpy/) python API to get historical OHLC data of SET index and stocks in Thailand
+- Create as an interactable web application using [Streamlit](https://streamlit.io)
+- Can customize some interface options
 
 ### Potential usage
 
@@ -23,7 +23,7 @@
 
 ## Run app locally
 ### Using docker
-Run the following command
+Run the following command  
 
 `docker build -t streamlitapp:latest .`  
 
@@ -45,4 +45,4 @@ Contributions are welcomed! Please feel free to open pull request on this reposi
 
 ## Disclaimer
 
-This application is for educational purpose only. Please use it with your own risk. **The datasource used in this project are from an unofficial source and may/should not be representative of the real market data.** For serious retail traders, I recommend seeking datasource from [authorized data providers by SET](https://www.set.or.th/en/products/info/data_vendors_p1.html) and do additonak research in this topic.
+This application is for educational purpose only. Please use it with your own risk. **The datasource used in this project are from an unofficial source and may/should not be representative of the real market data.** For serious retail traders, It is advised to seek realible datasource from [authorized data providers by SET](https://www.set.or.th/en/products/info/data_vendors_p1.html) and do additonal research before consider any trading decision.
