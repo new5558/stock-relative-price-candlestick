@@ -4,58 +4,66 @@ import pandas as pd
 from datetime import datetime
 import investpy
 import streamlit as st
+from datetime import datetime, timedelta
 
 
-st.set_page_config(page_title="Ex-stream-ly Cool App", page_icon="🧊", layout="wide", initial_sidebar_state="expanded", menu_items={
-    'Get Help': 'https://www.extremelycoolapp.com/help',
-    'Report a bug': "https://www.extremelycoolapp.com/bug",
-    'About': "# This is a header. This is an *extremely* cool app!"})
-
-
-def remove_gap_from_history(hist: pd.DataFrame, fig):
+def remove_gap_from_history(hist: pd.DataFrame, fig: go.Figure) -> None:
     begin_date, end_date = [hist.iloc[0].name, hist.iloc[-1].name]
     hist_reindex = hist.reindex(pd.date_range(begin_date, end_date, freq='D'))
     gap_datebreaks = hist_reindex['Close'][hist_reindex['Close'].isnull()].index
     fig.update_xaxes(rangebreaks=[dict(values=gap_datebreaks)])
 
+def get_date(lookback_days: int) -> [str, str]:
+    today = datetime.today()
+    today_lastyear = today - timedelta(days=lookback_days)
+    return today.strftime('%d/%m/%Y'), today_lastyear.strftime('%d/%m/%Y')
+
 @st.cache
-def load_stock_data(symbol: str):
+def load_stock_data(symbol: str, today: str, today_lastyear: str) -> pd.DataFrame: 
     stock_df = investpy.get_stock_historical_data(stock=symbol,
     country='Thailand',
-    from_date='01/01/2020',
-    to_date='01/01/2021')
+    from_date=today_lastyear,
+    to_date=today)
     return stock_df
 
 @st.cache
-def load_set_index_data():
+def load_set_index_data(today: str, today_lastyear: str) -> pd.DataFrame:
     set_index_df = investpy.get_index_historical_data(index='SET',
     country='Thailand',
-    from_date='01/01/2020',
-    to_date='01/01/2021')
+    from_date=today_lastyear,
+    to_date=today)
     return set_index_df
 
+@st.cache
+def data_transformation(stock_name: str, lookback_days: int) -> pd.DataFrame:
+    today, today_lastyear = get_date(lookback_days)
+    stock_df = load_stock_data(stock_name, today, today_lastyear)
+    set_index_df = load_set_index_data(today, today_lastyear)
 
-stock_name = ""
-with st.expander("Toggle settings", expanded = True):
-    st.title("Stock in Thailand's relative price to SET index")
+    stock_df = stock_df[['Open', 'High', 'Low', 'Close']]
+    set_index_df = set_index_df[['Open', 'High', 'Low', 'Close']]
 
-    stocks_list = investpy.stocks.get_stocks_list('Thailand')
-    stocks_list.remove('MONTRIu')
-    stock_name = st.selectbox('Select stock name', stocks_list)
+    result_df = stock_df / set_index_df if option == 'Relative with SET' else stock_df
+    return result_df
 
-    st.write('selected stock:', stock_name)
+title = "Stock in Thailand's relative price to SET index"
 
+st.set_page_config(page_title=title, page_icon="💎", layout="wide", initial_sidebar_state="expanded")
 
+st.title(title)
 
-    option = st.radio('Options', ['Relative with SET', 'Original'])
+stocks_list = investpy.stocks.get_stocks_list('Thailand')
+stocks_list.remove('MONTRIu')
+stock_name = st.sidebar.selectbox('Select stock name', stocks_list)
 
-stock_df = load_stock_data(stock_name)
-set_index_df = load_set_index_data()
+st.header('Symbol: ' + stock_name)
 
-stock_df = stock_df[['Open', 'High', 'Low', 'Close']]
-set_index_df = set_index_df[['Open', 'High', 'Low', 'Close']]
+option = st.sidebar.radio('Options', ['Relative with SET', 'Original'])
+lookback_days = st.sidebar.number_input('Lookback days', value = 365)
 
-result_df = stock_df / set_index_df if option == 'Relative with SET' else stock_df
+st.sidebar.write("![github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)  [Project's repo](https://github.com/new5558/stock-relative-price-candlestick)")
+
+result_df = data_transformation(stock_name, lookback_days)
 
 fig = go.Figure(data=[go.Candlestick(x=result_df.index,
                 open=result_df['Open'],
@@ -65,6 +73,7 @@ fig = go.Figure(data=[go.Candlestick(x=result_df.index,
 
 fig.update_layout(height=800)
 
-remove_gap_from_history(stock_df, fig)
+remove_gap_from_history(result_df, fig)
 
 st.plotly_chart(fig, use_container_width=True)
+
