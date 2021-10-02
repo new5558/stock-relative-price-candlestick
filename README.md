@@ -2,6 +2,10 @@
 
 ![image](https://user-images.githubusercontent.com/12471844/135728081-dc3a7327-ed81-44bf-bc1a-7047846e0408.png)
 
+## Demo
+
+[Heroku web application](https://candle-stick-streamlit.herokuapp.com/) (Will change to Streamlit cloud after being invited)
+
 ## Ideas
 
 - Inspired by Crypto symbols that is not traded with stable coin etc `BNBBTC`, `ETHBTC`
@@ -13,10 +17,6 @@
 
 `docker build -t streamlitapp:latest .`
 `docker run streamlitapp`
-
-## Deployment
-
-Comming soon! (Hopefully)
 
 ## Contributions
 
