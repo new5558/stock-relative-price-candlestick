@@ -17,8 +17,8 @@
 ### Potential usage
 
 - Create beta neutral price action strategy from candlestick graph. This can be done using SET50 index future to hedge your stock position.
-- Create statistical abritage strategy from price action. For example, we can buy stocks that is tempory underperform SET index and short sell temprty overperform SET index stocks
-- Imply inividual stock's rolling relative strength with market by looking at historial candlestick.
+- Create statistical abritage strategy from price action. For example, we can buy stocks that we believe are temporary underperform SET index and on the other hand short sell implied temporary overperform SET index stocks
+- Imply inividual stock's rolling relative strength with market by looking at historial candlestick. This may be used as an extension of [Relative price strength.](https://lingohelp.me/preposition-after-adjective/representative-of-for-in-to/)
 - and many more..
 
 ## Run app locally
