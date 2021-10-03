@@ -19,6 +19,12 @@ def get_date(lookback_days: int) -> [str, str]:
     today_lastyear = today - timedelta(days=lookback_days)
     return today.strftime('%d/%m/%Y'), today_lastyear.strftime('%d/%m/%Y')
 
+def add_ma(days: int, exponential: bool, df: pd.DataFrame) -> None:
+    if exponential:
+        df["MA"] = ta.ema(df["Close"], length=days)
+    else:
+        df["MA"] = ta.sma(df["Close"], length=days)
+
 @st.cache
 def load_stock_data(symbol: str, today: str, today_lastyear: str) -> pd.DataFrame: 
     stock_df = investpy.get_stock_historical_data(stock=symbol,
@@ -36,7 +42,7 @@ def load_set_index_data(today: str, today_lastyear: str) -> pd.DataFrame:
     return set_index_df
 
 @st.cache
-def data_transformation(stock_name: str, lookback_days: int) -> pd.DataFrame:
+def data_transformation(stock_name: str, lookback_days: int, ma_days: int, exponential_ma: bool) -> pd.DataFrame:
     today, today_lastyear = get_date(lookback_days)
     stock_df = load_stock_data(stock_name, today, today_lastyear)
     set_index_df = load_set_index_data(today, today_lastyear)
@@ -45,8 +51,7 @@ def data_transformation(stock_name: str, lookback_days: int) -> pd.DataFrame:
     set_index_df = set_index_df[['Open', 'High', 'Low', 'Close']]
 
     result_df = stock_df / set_index_df if option == 'Relative with SET' else stock_df
-    
-    result_df["EMA200"] = ta.ema(result_df["Close"], length=200)
+    add_ma(ma_days, exponential_ma, result_df)
     return result_df
 
 title = "Stock in Thailand's relative price to SET index"
@@ -64,16 +69,21 @@ st.header('Symbol: ' + stock_name)
 option = st.sidebar.radio('Options', ['Relative with SET', 'Original'])
 lookback_days = st.sidebar.number_input('Lookback days', value = 365)
 
+ma_days = st.sidebar.number_input('MA days', value = 50)
+ma_type = st.sidebar.radio('Options', ['EMA', 'MA'])
+is_ema = ma_type == 'EMA'
+ma_name = f"{ma_type}{ma_days}"
+
 st.sidebar.write("![github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)  [Project's repo](https://github.com/new5558/stock-relative-price-candlestick)")
 
-result_df = data_transformation(stock_name, lookback_days)
+result_df = data_transformation(stock_name, lookback_days, ma_days, is_ema)
 
 fig = go.Figure(data=[go.Candlestick(x=result_df.index,
                 open=result_df['Open'],
                 high=result_df['High'],
                 low=result_df['Low'],
                 close=result_df['Close'], name="Candle stick"), 
-                go.Scatter(x=result_df.index, y=result_df['EMA200'], line=dict(color='orange', width=2), name="EMA200")])
+                go.Scatter(x=result_df.index, y=result_df['MA'], line=dict(color='orange', width=2), name=ma_name)])
 
 fig.update_layout(height=800)
 
