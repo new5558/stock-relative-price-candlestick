@@ -4,11 +4,12 @@
 
 ## Demo
 
-[Heroku web application](https://candle-stick-streamlit.herokuapp.com/) (Will change to Streamlit cloud after being invited)
+[Steamlit Cloud](https://share.streamlit.io/new5558/stock-relative-price-candlestick/main.py)
 
 ## Ideas
 
 ### Key features
+
 - Inspired by Crypto symbols that are traded with non stable coin etc `BNBBTC`, `ETHBTC`
 - Use [investpy](https://pypi.org/project/investpy/) python API to get historical OHLC data of SET index and stocks in Thailand
 - Create as an interactable web application using [Streamlit](https://streamlit.io)
@@ -22,12 +23,14 @@
 - and many more..
 
 ## Run app locally
+
 ### Using docker
-Run the following command  
 
-`docker build -t streamlitapp:latest .`  
+Run the following command
 
-`docker run streamlitapp`  
+`docker build -t streamlitapp:latest .`
+
+`docker run streamlitapp`
 
 ### Using python
 
